@@ -25,7 +25,7 @@ export default function ContactPage() {
     if (errorMessage) setErrorMessage('');
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Simple validation
@@ -41,18 +41,60 @@ export default function ContactPage() {
 
     setIsSubmitting(true);
 
-    // Mock API submission transition
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-      setFormData({
-        name: '',
-        email: '',
-        category: 'General Inquiry',
-        subject: '',
-        message: '',
+    const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
+
+    if (!accessKey) {
+      // Fallback demo submission when no API key is configured
+      setTimeout(() => {
+        setIsSubmitting(false);
+        setIsSubmitted(true);
+        setFormData({
+          name: '',
+          email: '',
+          category: 'General Inquiry',
+          subject: '',
+          message: '',
+        });
+      }, 1200);
+      return;
+    }
+
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+          access_key: accessKey,
+          name: formData.name,
+          email: formData.email,
+          subject: `[WiFi Print Support] ${formData.subject} (${formData.category})`,
+          message: formData.message,
+          from_name: 'WiFi Print Support',
+        }),
       });
-    }, 1500);
+
+      const data = await response.json();
+
+      if (data.success) {
+        setIsSubmitted(true);
+        setFormData({
+          name: '',
+          email: '',
+          category: 'General Inquiry',
+          subject: '',
+          message: '',
+        });
+      } else {
+        setErrorMessage(data.message || 'Failed to send message. Please try again.');
+      }
+    } catch (error) {
+      setErrorMessage('Network error: Could not reach the email server. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -130,6 +172,12 @@ export default function ContactPage() {
                     We usually respond to bug reports and feature requests within 24-48 hours.
                   </p>
                 </div>
+
+                {!process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY && (
+                  <div style={{ background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.3)', color: '#f59e0b', padding: '0.75rem 1rem', borderRadius: '8px', fontSize: '0.875rem', lineHeight: '1.5' }}>
+                    ⚠️ <strong>Demo Mode:</strong> The email server is not connected. To receive real submissions in your inbox, generate a free access key at <a href="https://web3forms.com" target="_blank" rel="noopener noreferrer" style={{ color: '#818cf8', textDecoration: 'underline', fontWeight: 600 }}>Web3Forms</a> and add it as <code>NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY</code> in your environment variables.
+                  </div>
+                )}
 
                 {errorMessage && (
                   <div style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.3)', color: '#ef4444', padding: '0.75rem 1rem', borderRadius: '8px', fontSize: '0.95rem', fontWeight: 500 }}>
