@@ -153,7 +153,7 @@ export default function TermsPage() {
                 If you have questions, bug reports, feature suggestions, or general legal queries regarding these Terms of Service, please reach out to us:
               </p>
               <div className="both-required-badge" style={{ marginTop: '1rem', width: 'fit-content' }}>
-                <span>📧 Support Email: <strong>sagarsahni69@gmail.com</strong></span>
+                <span>📧 Support Email: <strong>support@calclabz.com</strong></span>
               </div>
               <p style={{ marginTop: '1.5rem' }}>
                 You can also fill out the inquiry form on our <Link href="/contact" style={{ color: 'var(--primary-color)', textDecoration: 'none', fontWeight: 600 }}>Contact Page</Link>.

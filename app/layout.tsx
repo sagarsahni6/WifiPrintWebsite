@@ -13,7 +13,7 @@ import Navbar from './components/Navbar';
 export const metadata: Metadata = {
   title: 'Print from Android to PC over Wi-Fi | WiFi Print — Free App & Scanner',
   description: 'Free app to print from your Android phone to any Windows PC printer over Wi-Fi. No cloud, no cables. Built-in document scanner, ID card scan, passport photos. Supports PDF, DOCX, images. Download now.',
-  keywords: 'print from phone to PC, print from android to windows, wifi printing app, wireless printer android, print pdf from phone, print documents from mobile, how to print from phone without wifi printer, android print to pc, print from phone to computer, mobile printing app free, scan and print app, id card scanner app, passport photo print app, print from phone to hp printer, print from samsung phone, print docx from android, local network printing, print without cloud, offline printer app, wifi direct print android, document scanner app android, scan to print, photo print from phone, free wireless printing app, print from phone to laptop, how to connect phone to printer wifi, best printing app android 2026, print from android to printer, wifi print app download',
+  keywords: 'best free printing app for android 2026, android to windows pc wi-fi print app, print from phone to PC, print from android to windows, wifi printing app, wireless printer android, print pdf from phone, print documents from mobile, how to print from phone without wifi printer, android print to pc, print from phone to computer, mobile printing app free, scan and print app, id card scanner app, passport photo print app, print from phone to hp printer, print from samsung phone, print docx from android, local network printing, print without cloud, offline printer app, wifi direct print android, document scanner app android, scan to print, photo print from phone, free wireless printing app, print from phone to laptop, how to connect phone to printer wifi, print from android to printer, wifi print app download, print from phone to usb printer, no cloud wireless printer app, free mobile print and scan app, local offline print server',
   robots: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
   alternates: {
     canonical: 'https://wifiprint.calclabz.com/',
@@ -52,6 +52,41 @@ export default function RootLayout({
       <head>
         <meta name="language" content="English" />
         <meta name="author" content="WiFi Print" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Home",
+                  "item": "https://wifiprint.calclabz.com"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Contact Support",
+                  "item": "https://wifiprint.calclabz.com/contact"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 3,
+                  "name": "Privacy Policy",
+                  "item": "https://wifiprint.calclabz.com/privacy"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 4,
+                  "name": "Terms of Service",
+                  "item": "https://wifiprint.calclabz.com/terms"
+                }
+              ]
+            })
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

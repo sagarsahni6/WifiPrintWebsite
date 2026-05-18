@@ -140,7 +140,7 @@ export default function ContactPage() {
                 For developer collaboration, API access requests, or business inquiries, feel free to contact us at:
               </p>
               <div style={{ background: 'var(--bg-darker)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '0.75rem 1rem', fontSize: '0.95rem', color: 'var(--text-primary)', fontWeight: 600 }}>
-                📧 sagarsahni69@gmail.com
+                📧 support@calclabz.com
               </div>
             </div>
 

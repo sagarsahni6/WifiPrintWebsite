@@ -151,7 +151,7 @@ export default function PrivacyPage() {
                 If you have any questions, concerns, or technical feedback regarding our security model, please contact our support team on our <Link href="/contact" style={{ color: 'var(--primary-color)', textDecoration: 'none', fontWeight: 600 }}>Contact Page</Link> or reach out directly via email:
               </p>
               <div className="both-required-badge" style={{ marginTop: '1rem', width: 'fit-content' }}>
-                <span>📧 Support Email: <strong>sagarsahni69@gmail.com</strong></span>
+                <span>📧 Support Email: <strong>support@calclabz.com</strong></span>
               </div>
             </section>
 
