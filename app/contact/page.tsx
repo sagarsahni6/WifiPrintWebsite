@@ -41,7 +41,7 @@ export default function ContactPage() {
 
     setIsSubmitting(true);
 
-    const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY;
+    const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY || "f0ee81fe-1120-4b75-afe8-eb185729bfda";
 
     if (!accessKey) {
       // Fallback demo submission when no API key is configured
@@ -173,7 +173,7 @@ export default function ContactPage() {
                   </p>
                 </div>
 
-                {!process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY && (
+                {!(process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY || "f0ee81fe-1120-4b75-afe8-eb185729bfda") && (
                   <div style={{ background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.3)', color: '#f59e0b', padding: '0.75rem 1rem', borderRadius: '8px', fontSize: '0.875rem', lineHeight: '1.5' }}>
                     ⚠️ <strong>Demo Mode:</strong> The email server is not connected. To receive real submissions in your inbox, generate a free access key at <a href="https://web3forms.com" target="_blank" rel="noopener noreferrer" style={{ color: '#818cf8', textDecoration: 'underline', fontWeight: 600 }}>Web3Forms</a> and add it as <code>NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY</code> in your environment variables.
                   </div>
