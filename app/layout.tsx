@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter, Outfit } from 'next/font/google';
+import Link from 'next/link';
 import './globals.css';
 import ThemeToggle from './components/ThemeToggle';
 import ScrollObserver from './components/ScrollObserver';
@@ -239,8 +240,9 @@ export default function RootLayout({
               <p>Free wireless printing from Android to Windows PC. Print PDFs, documents, images, and scanned files to any printer over Wi-Fi.</p>
             </div>
             <div className="footer-links">
-              <a href="#">Privacy Policy</a>
-              <a href="#">Terms of Service</a>
+              <Link href="/privacy">Privacy Policy</Link>
+              <Link href="/terms">Terms of Service</Link>
+              <Link href="/contact">Contact Us</Link>
             </div>
           </div>
           <div className="container copyright">
