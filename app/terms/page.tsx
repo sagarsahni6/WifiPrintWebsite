@@ -128,7 +128,7 @@ export default function TermsPage() {
             <section id="liability-limitation" className="legal-section">
               <h2>7. Limitation of Liability</h2>
               <p>
-                IN NO EVENT SHALL THE DEVELOPERS OR CALCLABZ BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING BUT NOT LIMITED TO:
+                IN NO EVENT SHALL SAGAR SAHNI BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING BUT NOT LIMITED TO:
               </p>
               <ul style={{ paddingLeft: '1.5rem', lineHeight: '1.8', color: 'var(--text-secondary)' }}>
                 <li>Loss of printer hardware functionality, paper wastage, or toner exhaustion.</li>
@@ -153,7 +153,7 @@ export default function TermsPage() {
                 If you have questions, bug reports, feature suggestions, or general legal queries regarding these Terms of Service, please reach out to us:
               </p>
               <div className="both-required-badge" style={{ marginTop: '1rem', width: 'fit-content' }}>
-                <span>📧 Support Email: <strong>support@wifiprint.calclabz.com</strong></span>
+                <span>📧 Support Email: <strong>sagarsahni69@gmail.com</strong></span>
               </div>
               <p style={{ marginTop: '1.5rem' }}>
                 You can also fill out the inquiry form on our <Link href="/contact" style={{ color: 'var(--primary-color)', textDecoration: 'none', fontWeight: 600 }}>Contact Page</Link>.
