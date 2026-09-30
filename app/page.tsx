@@ -1,759 +1,750 @@
-'use client';
-
-import { useState, useEffect } from 'react';
-
 export default function Home() {
-  // Pairing Simulator States
-  const [simStep, setSimStep] = useState<'pairing' | 'connecting' | 'dashboard' | 'printing' | 'completed'>('pairing');
-  const [pinInput, setPinInput] = useState('');
-  const [pinError, setPinError] = useState(false);
-  const [selectedPrinter, setSelectedPrinter] = useState('HP LaserJet Pro');
-  const [selectedDoc, setSelectedDoc] = useState('Annual_Report_2026.pdf');
-  const [printProgress, setPrintProgress] = useState(0);
-  const [printStatus, setPrintStatus] = useState('Connecting to spooler...');
-
-  // Pairing validation handler
-  const handlePairSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (pinInput.trim() === '582914') {
-      setPinError(false);
-      setSimStep('connecting');
-    } else {
-      setPinError(true);
-    }
-  };
-
-  // Simulate local pairing discovery
-  useEffect(() => {
-    if (simStep === 'connecting') {
-      const timer = setTimeout(() => {
-        setSimStep('dashboard');
-      }, 1500);
-      return () => clearTimeout(timer);
-    }
-  }, [simStep]);
-
-  // Simulate progress when printing
-  useEffect(() => {
-    if (simStep === 'printing') {
-      setPrintProgress(0);
-      setPrintStatus('Initiating secure P2P TLS connection...');
-      
-      const interval = setInterval(() => {
-        setPrintProgress((prev) => {
-          const next = prev + 5;
-          if (next >= 100) {
-            clearInterval(interval);
-            setTimeout(() => {
-              setSimStep('completed');
-            }, 600);
-            return 100;
-          }
-          
-          // Dynamic status updates based on progress
-          if (next < 25) {
-            setPrintStatus('Generating dynamic AES encryption keys...');
-          } else if (next < 50) {
-            setPrintStatus('Streaming document content over local network...');
-          } else if (next < 75) {
-            setPrintStatus('Windows Print Spooler assembling payload...');
-          } else {
-            setPrintStatus('Printer active - spooling paper feeds...');
-          }
-          
-          return next;
-        });
-      }, 150);
-      
-      return () => clearInterval(interval);
-    }
-  }, [simStep]);
-
   return (
     <main>
-
-    <header className="hero">
+      {/* ══════════════════ Hero Section ══════════════════ */}
+      <header className="hero">
         <div className="container hero-container">
-            <div className="hero-content fade-in">
-                <div className="badge">Best Free Printing App for Android 2026</div>
-                <h1>Print from Your Android Phone to Any PC Printer over Wi-Fi</h1>
-                <p>Looking for a secure **Android to Windows PC Wi-Fi print app**? Connect your Android device directly to your Windows 10 or Windows 11 PC over local Wi-Fi and **print from your phone to a PC printer** instantly. No cloud, no cables, and 100% free. Perfect for printing PDFs, DOCX, images, and features a professional mobile document scanner.</p>
-                <div className="hero-cta">
-                    <a href="#download" className="btn btn-primary" aria-label="Download Android App">
-                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M22.64 7.53L12 2.22 1.36 7.53a1 1 0 0 0-.58.83v7.28a1 1 0 0 0 .58.83L12 21.78l10.64-5.31a1 1 0 0 0 .58-.83V8.36a1 1 0 0 0-.58-.83z"></path><polyline points="12 22 12 12"></polyline><polyline points="23 8 12 12 1 8"></polyline></svg>
-                        Get Android App
-                    </a>
-                    <a href="#download" className="btn btn-secondary" aria-label="Download Desktop Server">
-                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-                        PC Server Download
-                    </a>
-                </div>
+          <div className="hero-content fade-in">
+            <div className="announcement-badge">
+              <span className="pulse-dot"></span>
+              <span>v2.0 Released: On-Device OCR Scanner + Batch Mode + Cross-Network PIN</span>
             </div>
-            
-            {/* Interactive Live Pairing Simulator Widget */}
-            <div className="hero-image fade-in-delay">
-                <div className="glass-panel main-panel sim-wrapper">
-                    <div className="sim-header">
-                        <div className="sim-title-container">
-                            <span className="pulse-signal-dot"></span>
-                            <span className="sim-title-txt">Local Discovery &amp; Connection Simulator</span>
-                        </div>
-                        <span className="sim-badge-item">Interactive Sandbox</span>
-                    </div>
-                    
-                    <div className="sim-grid">
-                        {/* Android Mobile Screen */}
-                        <div className="sim-device sim-mobile">
-                            <div className="mobile-speaker"></div>
-                            <div className="mobile-inner-screen">
-                                <div className="mobile-app-header">
-                                    <span>🖨️ WiFi Print Mobile</span>
-                                    <span className="battery-icon">🔋</span>
-                                </div>
-                                
-                                {simStep === 'pairing' && (
-                                    <div className="mobile-screen-body flex-center-col">
-                                        <div className="phone-discovery-box">
-                                            <div className="radar-ping"></div>
-                                            <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Scanning subnet...</span>
-                                            <strong style={{ fontSize: '0.9rem', color: 'var(--primary-color)' }}>PC-DESKTOP Found</strong>
-                                        </div>
-                                        <form onSubmit={handlePairSubmit} className="pin-form-layout">
-                                            <label htmlFor="sim-pin" className="pin-label-txt">Enter PC Pairing PIN:</label>
-                                            <input 
-                                                type="text" 
-                                                id="sim-pin"
-                                                maxLength={6}
-                                                placeholder="e.g. 582914" 
-                                                value={pinInput}
-                                                onChange={(e) => setPinInput(e.target.value.replace(/\D/g, ''))}
-                                                className={`pin-input-field ${pinError ? 'field-error' : ''}`}
-                                            />
-                                            {pinError && <p className="error-tip-msg">❌ Invalid PIN. Hint: Look at PC screen!</p>}
-                                            
-                                            <div className="pin-hint-box" onClick={() => setPinInput('582914')}>
-                                                💡 Autofill matching PIN
-                                            </div>
-                                            
-                                            <button type="submit" className="btn btn-primary btn-small w-full" style={{ marginTop: '0.5rem' }}>
-                                                🔒 Connect &amp; Pair
-                                            </button>
-                                        </form>
-                                    </div>
-                                )}
-                                
-                                {simStep === 'connecting' && (
-                                    <div className="mobile-screen-body flex-center-col">
-                                        <div className="connecting-spinner"></div>
-                                        <h4 style={{ fontSize: '1rem', marginTop: '1rem', color: 'var(--text-primary)' }}>Pairing...</h4>
-                                        <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textAlign: 'center', margin: '0.5rem 0 0' }}>
-                                            Exchanging local ECDSA cryptographic handshakes...
-                                        </p>
-                                    </div>
-                                )}
-                                
-                                {simStep === 'dashboard' && (
-                                    <div className="mobile-screen-body">
-                                        <div className="console-card">
-                                            <label className="console-label">Select File:</label>
-                                            <select 
-                                                value={selectedDoc} 
-                                                onChange={(e) => setSelectedDoc(e.target.value)}
-                                                className="console-select"
-                                            >
-                                                <option value="Annual_Report_2026.pdf">📄 Annual_Report_2026.pdf</option>
-                                                <option value="ID_Card_Merged.pdf">🪪 ID_Card_Merged.pdf</option>
-                                                <option value="Passport_Photo_Sheet.jpg">🖼️ Passport_Photo_Sheet.jpg</option>
-                                            </select>
-                                        </div>
-                                        
-                                        <div className="console-card" style={{ marginTop: '0.5rem' }}>
-                                            <label className="console-label">Select PC Printer:</label>
-                                            <select 
-                                                value={selectedPrinter} 
-                                                onChange={(e) => setSelectedPrinter(e.target.value)}
-                                                className="console-select"
-                                            >
-                                                <option value="HP LaserJet Pro">🖨️ HP LaserJet Pro</option>
-                                                <option value="Canon PIXMA G3010">🖨️ Canon PIXMA G3010</option>
-                                                <option value="Epson EcoTank L3210">🖨️ Epson EcoTank L3210</option>
-                                            </select>
-                                        </div>
-                                        
-                                        <button 
-                                            onClick={() => setSimStep('printing')} 
-                                            className="btn btn-primary btn-small w-full pulse-glow-btn"
-                                            style={{ marginTop: '1rem' }}
-                                        >
-                                            ⚡ Send Print Job
-                                        </button>
-                                    </div>
-                                )}
-                                
-                                {simStep === 'printing' && (
-                                    <div className="mobile-screen-body flex-center-col" style={{ justifyContent: 'center' }}>
-                                        <div className="sending-indicator">📶</div>
-                                        <h4 style={{ fontSize: '0.95rem', margin: '0.5rem 0', color: 'var(--text-primary)' }}>Uploading file...</h4>
-                                        <div className="progress-outer"><div className="progress-inner" style={{ width: `${printProgress}%` }}></div></div>
-                                        <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--primary-color)', marginTop: '0.25rem' }}>{printProgress}% Sent</span>
-                                    </div>
-                                )}
-                                
-                                {simStep === 'completed' && (
-                                    <div className="mobile-screen-body flex-center-col" style={{ justifyContent: 'center' }}>
-                                        <span className="success-emoji-ring">✨</span>
-                                        <h4 style={{ fontSize: '1rem', color: '#10b981', margin: '0.5rem 0 0' }}>Job Transmitted!</h4>
-                                        <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: '0.25rem 0 0' }}>
-                                            Safe offline Wi-Fi transfer completed.
-                                        </p>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                        
-                        {/* Windows Desktop Server Screen */}
-                        <div className="sim-device sim-desktop">
-                            <div className="desktop-bar">
-                                <span className="dot red"></span><span className="dot yellow"></span><span className="dot green"></span>
-                                <span className="desktop-win-title">WiFi Print Desktop Server (PC)</span>
-                            </div>
-                            <div className="desktop-inner-screen">
-                                <div className="win-server-banner">
-                                    <span>🖥️ Local Host Active</span>
-                                    <span className="server-status-pill">Running</span>
-                                </div>
-                                
-                                {simStep === 'pairing' && (
-                                    <div className="win-screen-body flex-center-col">
-                                        <span className="win-lock-icon">🔑</span>
-                                        <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '0.25rem 0' }}>Secure Pairing PIN:</p>
-                                        <div className="pair-pin-display">582-914</div>
-                                        <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textAlign: 'center', margin: '0.5rem 0 0' }}>
-                                            Enter this code on your mobile device to establish P2P trust.
-                                        </p>
-                                    </div>
-                                )}
-                                
-                                {simStep === 'connecting' && (
-                                    <div className="win-screen-body flex-center-col">
-                                        <div className="connecting-radar-pc"></div>
-                                        <span style={{ fontSize: '0.8rem', color: 'var(--primary-color)', fontWeight: 600, marginTop: '0.5rem' }}>
-                                            Accepting pairing token...
-                                        </span>
-                                    </div>
-                                )}
-                                
-                                {simStep === 'dashboard' && (
-                                    <div className="win-screen-body flex-center-col" style={{ justifyContent: 'center' }}>
-                                        <span className="device-success-icon">✔️</span>
-                                        <h4 style={{ fontSize: '0.95rem', color: 'var(--text-primary)', margin: '0.5rem 0 0' }}>Android Device Paired</h4>
-                                        <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', margin: '0.25rem 0 0' }}>
-                                            Ready to accept direct printing jobs over Wi-Fi.
-                                        </p>
-                                    </div>
-                                )}
-                                
-                                {simStep === 'printing' && (
-                                    <div className="win-screen-body">
-                                        <div className="printing-job-box">
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                                <span className="spooler-spinner"></span>
-                                                <strong style={{ fontSize: '0.85rem', color: 'var(--text-primary)' }}>Spooling: {selectedDoc}</strong>
-                                            </div>
-                                            <p style={{ fontSize: '0.725rem', color: 'var(--text-secondary)', margin: '0.5rem 0 0', fontStyle: 'italic' }}>
-                                                {printStatus}
-                                            </p>
-                                            <div className="progress-outer" style={{ marginTop: '0.5rem', height: '4px' }}>
-                                                <div className="progress-inner" style={{ width: `${printProgress}%`, background: '#10b981' }}></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-                                
-                                {simStep === 'completed' && (
-                                    <div className="win-screen-body flex-center-col" style={{ padding: '1rem' }}>
-                                        {/* CSS Simulated Printer Output */}
-                                        <div className="css-printer-mockup">
-                                            <div className="printer-top-slot"></div>
-                                            <div className="printer-body-box">🖨️ {selectedPrinter}</div>
-                                            <div className="printed-sheet-animate">
-                                                <div className="printed-sheet-header">
-                                                    <span>Success!</span>
-                                                    <span>100% printed</span>
-                                                </div>
-                                                <div className="printed-sheet-content">
-                                                    <p>{selectedDoc}</p>
-                                                    <div className="content-bar"></div>
-                                                    <div className="content-bar" style={{ width: '60%' }}></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <button 
-                                            onClick={() => {
-                                                setSimStep('pairing');
-                                                setPinInput('');
-                                            }}
-                                            className="btn btn-secondary btn-small reset-sim-btn"
-                                            style={{ marginTop: '0.5rem', fontSize: '0.75rem', padding: '0.35rem 0.75rem' }}
-                                        >
-                                            🔄 Reset Connection Demo
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <h1>Print from Your Android Phone to Any PC Printer over Wi-Fi</h1>
+            <p>
+              Transform your Windows 10 or 11 PC into an instant wireless print bridge. Print documents,
+              password-protected PDFs, Office files, and photos directly from your phone — <strong>completely offline,
+              zero cloud, no cables, and 100% free</strong>. Now featuring an advanced on-device ML Kit OCR scanner
+              with continuous batch scanning and post-scan editing.
+            </p>
+            <div className="hero-cta">
+              <a href="#download" className="btn btn-primary" aria-label="Download Android App APK">
+                <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                Download Android App
+              </a>
+              <a href="#download" className="btn btn-secondary" aria-label="Download Windows Server">
+                <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                  <line x1="8" y1="21" x2="16" y2="21"></line>
+                  <line x1="12" y1="17" x2="12" y2="21"></line>
+                </svg>
+                Download PC Server
+              </a>
+              <a href="https://github.com/sagarsahni6/wifi-print" target="_blank" rel="noopener" className="btn btn-secondary" aria-label="GitHub Repository">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+                  <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"></path>
+                </svg>
+                GitHub
+              </a>
             </div>
+          </div>
+
+          {/* ── Hero Mockup Preview ── */}
+          <div className="hero-image fade-in-delay">
+            <div className="glass-panel main-panel">
+              <div className="app-mockup">
+                <div className="mockup-header">
+                  <span className="dot red"></span>
+                  <span className="dot yellow"></span>
+                  <span className="dot green"></span>
+                  <span style={{ fontSize: "11px", fontWeight: "600", color: "var(--text-secondary)", marginLeft: "8px" }}>
+                    WiFi Print Server v2.0 — Live Status
+                  </span>
+                </div>
+                <div className="mockup-body">
+                  <div className="printer-status">
+                    <div className="printer-icon">🖨️</div>
+                    <div>
+                      <div className="mockup-printer-name">HP LaserJet Pro 400</div>
+                      <p>Ready • 192.168.1.56:5000 • PIN: 558 127</p>
+                    </div>
+                  </div>
+                  <div className="print-job">
+                    <div className="job-icon">📄</div>
+                    <div className="job-info">
+                      <div className="mockup-file-name">Contract_Scan_OCR_Page1-6.pdf</div>
+                      <div className="progress-bar"><div className="progress" style={{ width: "88%" }}></div></div>
+                    </div>
+                    <div className="job-status">Printing (88%)...</div>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "1rem", paddingTop: "0.75rem", borderTop: "1px solid var(--border-color)", fontSize: "0.75rem", color: "var(--text-secondary)" }}>
+                    <span>⚡ Subnet Auto-Connect: Active</span>
+                    <span style={{ color: "#10b981", fontWeight: "600" }}>✓ AES TLS Encrypted</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div className="glow glow-1"></div>
         <div className="glow glow-2"></div>
-    </header>
+      </header>
 
-    <section id="about" className="section bg-darker">
-        <div className="container">
-            <div className="section-header fade-in">
-                <h2>Why Choose WiFi Print for Your Wireless Printing Needs?</h2>
-                <p>A reliable, brand-agnostic local-network printing solution designed for speed, total privacy, and cross-device ease of use.</p>
+      {/* ══════════════════ Trust & Metrics Bar ══════════════════ */}
+      <section className="container" style={{ padding: "0" }}>
+        <div className="trust-bar fade-in">
+          <div className="trust-item">
+            <div className="trust-icon">🛡️</div>
+            <div>
+              <h4>100% Local &amp; Private</h4>
+              <p>Zero cloud servers. Your files never leave your LAN.</p>
             </div>
-            <div className="about-content fade-in">
-                <p>In today's fast-paced environment, the ability to **print from your phone to a PC printer** shouldn't require bloated cloud setups, expensive brand-locked subscriptions, or uploading your confidential records to overseas databases. WiFi Print acts as a secure local bridge between your mobile device and your existing desktop printers over your private home or office local Wi-Fi router.</p>
-                <p>Whether you need to quickly **print a PDF from your phone**, send a Microsoft Word DOCX report, or output high-resolution imagery, our local offline network print client coordinates it instantly. The Android app automatically discovers your Windows PC using standard Multicast DNS (mDNS) discovery. Once paired securely using a local 6-digit verification PIN, all device-to-device communication is fully encrypted with HTTPS (TLS) connections.</p>
-                <p>By bypassing external cloud servers, WiFi Print secures maximum local router transfer speeds, zero latency, and absolute file privacy. It is the premier **free wireless printing app** designed to turn any printer connected to your computer—including USB-only legacy machines—into a wireless powerhouse without any cloud dependence.</p>
+          </div>
+          <div className="trust-item">
+            <div className="trust-icon">⚡</div>
+            <div>
+              <h4>Zero Latency Speed</h4>
+              <p>Direct peer-to-peer Wi-Fi transfer at router line-speed.</p>
             </div>
+          </div>
+          <div className="trust-item">
+            <div className="trust-icon">🖨️</div>
+            <div>
+              <h4>Universal Hardware</h4>
+              <p>Works with USB, network, and thermal printers on Windows.</p>
+            </div>
+          </div>
+          <div className="trust-item">
+            <div className="trust-icon">🔍</div>
+            <div>
+              <h4>On-Device ML OCR</h4>
+              <p>Instant text recognition &amp; batch document scanning.</p>
+            </div>
+          </div>
         </div>
-    </section>
+      </section>
 
-    <section id="how-it-works" className="section">
+      {/* ══════════════════ Why Choose WiFi Print ══════════════════ */}
+      <section id="about" className="section bg-darker">
         <div className="container">
-            <div className="section-header fade-in">
-                <h2>Simple 3-Step Setup</h2>
-                <p>Discover how simple it is to print from your Android phone to a Windows PC printer.</p>
-            </div>
-            <div className="steps-grid">
-                <div className="step-card fade-in">
-                    <div className="step-number">1</div>
-                    <div className="step-icon">
-                        <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-                    </div>
-                    <h3>Launch PC Server</h3>
-                    <p>Start our lightweight, local offline printer server on your Windows PC. It automatically recognizes all connected USB and network printers.</p>
-                </div>
-                <div className="step-card fade-in">
-                    <div className="step-number">2</div>
-                    <div className="step-icon">
-                        <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
-                    </div>
-                    <h3>Pair Mobile App</h3>
-                    <p>Open the Android print app. It automatically auto-discovers your host PC on the local network. Securely pair using the displayed 6-digit PIN.</p>
-                </div>
-                <div className="step-card fade-in">
-                    <div className="step-number">3</div>
-                    <div className="step-icon">
-                        <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-                    </div>
-                    <h3>Print Local &amp; Fast</h3>
-                    <p>Select your PDF, DOCX, image, or fresh camera scan. Customize printer parameters and send the file directly to your printer.</p>
-                </div>
-            </div>
+          <div className="section-header fade-in">
+            <h2>Why Choose WiFi Print for Your Wireless Printing Needs?</h2>
+            <p>A fast, private, and universal alternative to abandoned cloud services and bloated manufacturer apps.</p>
+          </div>
+          <div className="about-content fade-in">
+            <p>
+              In December 2020, Google discontinued <strong>Google Cloud Print</strong>, leaving millions of users
+              unable to easily print from their Android phones to standard PC printers. Manufacturer apps like HP Smart,
+              Canon PRINT, and Epson iPrint only work with their specific brand of expensive wireless printers, require
+              mandatory accounts, and push your private documents through external cloud servers.
+            </p>
+            <p>
+              <strong>WiFi Print solves this permanently.</strong> It turns any Windows 10 or Windows 11 PC into an
+              intelligent, secure wireless print hub. If a printer is installed on your computer — even an old
+              budget USB-only printer — your Android phone can print to it wirelessly across your local Wi-Fi network.
+            </p>
+            <p>
+              With <strong>v2.0</strong>, WiFi Print now includes a full-fledged mobile document workstation:
+              continuous batch scanning, Google ML Kit on-device OCR, password-protected PDF support, and cross-network
+              PIN pairing. All with zero subscriptions, zero ads, and zero cloud tracking.
+            </p>
+          </div>
         </div>
-    </section>
+      </section>
 
-    <section id="scanner" className="section">
+      {/* ══════════════════ How It Works ══════════════════ */}
+      <section id="how-it-works" className="section">
         <div className="container">
-            <div className="section-header fade-in">
-                <div className="badge">Free Mobile Print and Scan App</div>
-                <h2>Turn Your Phone Into a Scanning Station</h2>
-                <p>Capture physical documents, crop, align, and print them instantly with our advanced scanner framework.</p>
+          <div className="section-header fade-in">
+            <h2>How It Works in 3 Simple Steps</h2>
+            <p>Connect your phone and printer in under 30 seconds.</p>
+          </div>
+          <div className="steps-grid">
+            <div className="step-card fade-in">
+              <div className="step-number">1</div>
+              <div className="step-icon">
+                <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                  <line x1="8" y1="21" x2="16" y2="21"></line>
+                  <line x1="12" y1="17" x2="12" y2="21"></line>
+                </svg>
+              </div>
+              <h3>Launch the Server</h3>
+              <p>Run the lightweight .NET 8 desktop server on your Windows PC. It auto-detects all installed printers (USB, network, or virtual PDF) and displays your connection PIN.</p>
             </div>
-            
-            <div className="scanner-showcase fade-in">
-                <div className="showcase-item">
-                    <div className="phone-frame">
-                        <div className="phone-notch"></div>
-                        <div className="phone-screen phone-screen--doc">
-                            <div className="scan-line"></div>
-                            <div className="doc-viewfinder">
-                                <div className="doc-paper">
-                                    <div className="doc-line" style={{ width: "80%" }}></div>
-                                    <div className="doc-line" style={{ width: "60%" }}></div>
-                                    <div className="doc-line" style={{ width: "90%" }}></div>
-                                    <div className="doc-line" style={{ width: "45%" }}></div>
-                                    <div className="doc-line" style={{ width: "75%" }}></div>
-                                    <div className="doc-line" style={{ width: "55%" }}></div>
-                                </div>
-                                <div className="detect-corner corner-tl"></div>
-                                <div className="detect-corner corner-tr"></div>
-                                <div className="detect-corner corner-bl"></div>
-                                <div className="detect-corner corner-br"></div>
-                            </div>
-                            <div className="phone-hud">
-                                <div className="hud-pill hud-pill--active">Auto Scan</div>
-                                <div className="hud-capture-btn"><div className="hud-capture-inner"></div></div>
-                                <div className="hud-pill">Manual</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="showcase-label">
-                        <div className="showcase-icon">
-                            <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" strokeWidth="2" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-                        </div>
-                        <h3>AI Document Scanner</h3>
-                        <p>Automatic page boundary intelligence, perspective warping, and auto-straightening. Capture and compile multi-page files instantly.</p>
-                    </div>
-                </div>
-
-                <div className="showcase-item">
-                    <div className="phone-frame">
-                        <div className="phone-notch"></div>
-                        <div className="phone-screen phone-screen--id">
-                            <div className="id-viewfinder">
-                                <div className="id-card id-card--front">
-                                    <div className="id-photo-placeholder"></div>
-                                    <div className="id-details">
-                                        <div className="id-line id-line--name"></div>
-                                        <div className="id-line id-line--short"></div>
-                                        <div className="id-line id-line--short"></div>
-                                    </div>
-                                    <span className="id-label">FRONT SIDE</span>
-                                </div>
-                                <div className="id-merge-arrow">
-                                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2.5" fill="none"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                                </div>
-                                <div className="id-card id-card--back">
-                                    <div className="id-stripe"></div>
-                                    <div className="id-barcode">
-                                        <div className="barcode-line"></div><div className="barcode-line"></div><div className="barcode-line"></div>
-                                    </div>
-                                    <span className="id-label">BACK SIDE</span>
-                                </div>
-                            </div>
-                            <div className="phone-hud">
-                                <div className="id-step-indicator">
-                                    <span className="step-dot step-dot--done"></span>
-                                    <span className="step-connector"></span>
-                                    <span className="step-dot step-dot--active"></span>
-                                </div>
-                                <div className="hud-status">Combining dimensions...</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="showcase-label">
-                        <div className="showcase-icon">
-                            <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" strokeWidth="2" fill="none"><rect x="3" y="4" width="18" height="16" rx="2"></rect><line x1="7" y1="8" x2="17" y2="8"></line><line x1="7" y1="12" x2="17" y2="12"></line><line x1="7" y1="16" x2="13" y2="16"></line></svg>
-                        </div>
-                        <h3>Integrated ID Card Scanner</h3>
-                        <p>Scan both faces of a driver's license or government ID card, and automatically assemble them on a single printable sheet.</p>
-                    </div>
-                </div>
-
-                <div className="showcase-item">
-                    <div className="phone-frame">
-                        <div className="phone-notch"></div>
-                        <div className="phone-screen phone-screen--photo">
-                            <div className="photo-grid-preview">
-                                <div className="photo-sheet">
-                                    <div className="photo-cell"><div className="photo-avatar"></div></div>
-                                    <div className="photo-cell"><div className="photo-avatar"></div></div>
-                                    <div className="photo-cell"><div className="photo-avatar"></div></div>
-                                    <div className="photo-cell"><div className="photo-avatar"></div></div>
-                                    <div className="photo-cell"><div className="photo-avatar"></div></div>
-                                    <div className="photo-cell"><div className="photo-avatar"></div></div>
-                                </div>
-                            </div>
-                            <div className="phone-hud">
-                                <div className="template-chips">
-                                    <span className="template-chip">Passport</span>
-                                    <span className="template-chip template-chip--active">Visa 2x2</span>
-                                    <span className="template-chip">Wallet</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="showcase-label">
-                        <div className="showcase-icon">
-                            <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" strokeWidth="2" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-                        </div>
-                        <h3>Official Passport Photo Templates</h3>
-                        <p>Quickly snap a photo, align with templates (35x45mm passport, 2x2 inch visa), and auto-arrange a print grid to save paper.</p>
-                    </div>
-                </div>
+            <div className="step-card fade-in">
+              <div className="step-number">2</div>
+              <div className="step-icon">
+                <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                  <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                </svg>
+              </div>
+              <h3>Pair Instantly</h3>
+              <p>Open the Android app. On the same Wi-Fi, it discovers the server automatically via mDNS. If on another network, scan the QR code or enter the 6-digit PIN.</p>
             </div>
+            <div className="step-card fade-in">
+              <div className="step-number">3</div>
+              <div className="step-icon">
+                <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                  <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                  <rect x="6" y="14" width="12" height="8"></rect>
+                </svg>
+              </div>
+              <h3>Select, Scan &amp; Print</h3>
+              <p>Pick a PDF, Office doc, image, or use the built-in OCR document scanner. Set copies, color, and paper size, then print directly at line-speed.</p>
+            </div>
+          </div>
         </div>
-    </section>
+      </section>
 
-    <section id="use-cases" className="section bg-darker">
+      {/* ══════════════════ Scanner & OCR Showcase ══════════════════ */}
+      <section id="scanner" className="section bg-darker">
         <div className="container">
-            <div className="section-header fade-in">
-                <h2>Engineered for Every Printing Scenario</h2>
-                <p>Whether at home, in the classroom, or on the secure office floor, WiFi Print simplifies wireless document delivery.</p>
+          <div className="section-header fade-in">
+            <div className="announcement-badge">
+              <span>Major Upgrade in v2.0</span>
             </div>
-            <div className="use-cases-grid">
-                <div className="use-case-card fade-in">
-                    <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
-                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="var(--primary-color)" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="9" y="22" width="6" height="10"></rect></svg>
-                        <h3 style={{ margin: "0" }}>Home Printing Solved</h3>
-                    </div>
-                    <p>Stop emailing links or PDF attachments to yourself just to print. Use WiFi Print to send boarding passes, receipts, and photos directly from your phone to your PC's default printer without leaving the couch. Works flawlessly with both wireless and traditional USB printers.</p>
-                </div>
-                <div className="use-case-card fade-in">
-                    <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
-                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="var(--primary-color)" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-                        <h3 style={{ margin: "0" }}>Secure Office Workflows</h3>
-                    </div>
-                    <p>Allow team members to print documents from their mobile devices without granting them unrestricted network directories or admin privileges. Cryptographically signed JWT pairing keys ensure only validated devices can queue print files on the host computer.</p>
-                </div>
-                <div className="use-case-card fade-in">
-                    <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
-                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="var(--primary-color)" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
-                        <h3 style={{ margin: "0" }}>Academic Convenience</h3>
-                    </div>
-                    <p>finalize assignments on your tablet or smartphone, and print them in seconds. Since the app supports DOCX and PDF, your formats remain perfect, and your document is ready at your printer tray the moment you walk to your desk.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+            <h2>Advanced On-Device Document Scanner &amp; ML Kit OCR</h2>
+            <p>Turn your phone into a professional portable document scanner with machine learning text extraction and post-scan studio.</p>
+          </div>
 
-    <section id="features" className="section">
+          <div className="scanner-showcase fade-in">
+            {/* Showcase 1: ML Kit OCR */}
+            <div className="showcase-item">
+              <div className="phone-frame">
+                <div className="phone-notch"></div>
+                <div className="phone-screen phone-screen--ocr">
+                  <div>
+                    <span className="ocr-badge">⚡ ML Kit On-Device OCR</span>
+                    <div className="ocr-box">
+                      <div className="ocr-line" style={{ width: "95%" }}></div>
+                      <div className="ocr-line" style={{ width: "80%" }}></div>
+                      <div className="ocr-line" style={{ width: "88%" }}></div>
+                      <div className="ocr-line" style={{ width: "65%" }}></div>
+                    </div>
+                  </div>
+                  <div className="ocr-extracted-preview">
+                    <strong>Recognized Text:</strong><br />
+                    INVOICE #9402<br />
+                    Total Due: $1,450.00<br />
+                    Status: Approved
+                  </div>
+                  <div className="phone-hud">
+                    <div className="hud-pill hud-pill--active">Copy All Text</div>
+                    <div className="hud-pill">Search Text</div>
+                  </div>
+                </div>
+              </div>
+              <div className="showcase-label">
+                <div className="showcase-icon">
+                  <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" strokeWidth="2" fill="none">
+                    <polyline points="4 7 4 4 20 4 20 7"></polyline>
+                    <line x1="9" y1="20" x2="15" y2="20"></line>
+                    <line x1="12" y1="4" x2="12" y2="20"></line>
+                  </svg>
+                </div>
+                <h3>On-Device ML Kit OCR</h3>
+                <p>Extract text instantly from scanned receipts, invoices, and documents. Copy to clipboard or search text completely offline.</p>
+              </div>
+            </div>
+
+            {/* Showcase 2: Continuous Batch Scan */}
+            <div className="showcase-item">
+              <div className="phone-frame">
+                <div className="phone-notch"></div>
+                <div className="phone-screen phone-screen--batch">
+                  <span className="batch-counter">Batch: 5 Pages Captured</span>
+                  <div className="batch-pages-stack">
+                    <div className="batch-page-layer"></div>
+                    <div className="batch-page-layer"></div>
+                    <div className="batch-page-layer"></div>
+                  </div>
+                  <div className="phone-hud">
+                    <div className="hud-pill">Scan Next</div>
+                    <div className="hud-pill hud-pill--active">Finish &amp; Review</div>
+                  </div>
+                </div>
+              </div>
+              <div className="showcase-label">
+                <div className="showcase-icon">
+                  <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" strokeWidth="2" fill="none">
+                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                  </svg>
+                </div>
+                <h3>Continuous Batch Mode</h3>
+                <p>Scan multi-page contracts, book chapters, and documents one after another. Reorder pages and compile into a single PDF.</p>
+              </div>
+            </div>
+
+            {/* Showcase 3: ID Card Auto-Merge */}
+            <div className="showcase-item">
+              <div className="phone-frame">
+                <div className="phone-notch"></div>
+                <div className="phone-screen phone-screen--id">
+                  <div className="id-viewfinder">
+                    <div className="id-card id-card--front">
+                      <div className="id-photo-placeholder"></div>
+                      <div className="id-details">
+                        <div className="id-line id-line--name"></div>
+                        <div className="id-line id-line--short"></div>
+                      </div>
+                      <span className="id-label">FRONT</span>
+                    </div>
+                    <div className="id-merge-arrow">
+                      <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2.5" fill="none"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </div>
+                    <div className="id-card id-card--back">
+                      <div className="id-stripe"></div>
+                      <span className="id-label">BACK</span>
+                    </div>
+                  </div>
+                  <div className="phone-hud">
+                    <div className="hud-status">Combined on 1 Page</div>
+                  </div>
+                </div>
+              </div>
+              <div className="showcase-label">
+                <div className="showcase-icon">
+                  <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" strokeWidth="2" fill="none">
+                    <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+                    <line x1="7" y1="8" x2="17" y2="8"></line>
+                    <line x1="7" y1="12" x2="17" y2="12"></line>
+                  </svg>
+                </div>
+                <h3>ID Card Auto-Merge</h3>
+                <p>Scan front and back of driver's licenses or badges. The app aligns both sides onto a single printable page automatically.</p>
+              </div>
+            </div>
+
+            {/* Showcase 4: Post-Scan Editing Studio */}
+            <div className="showcase-item">
+              <div className="phone-frame">
+                <div className="phone-notch"></div>
+                <div className="phone-screen phone-screen--doc">
+                  <div className="doc-viewfinder">
+                    <div className="doc-paper" style={{ transform: "rotate(0deg)" }}>
+                      <div className="doc-line" style={{ width: "85%" }}></div>
+                      <div className="doc-line" style={{ width: "70%" }}></div>
+                      <div className="doc-line" style={{ width: "90%" }}></div>
+                      <div className="doc-line" style={{ width: "60%" }}></div>
+                    </div>
+                    <div className="detect-corner corner-tl"></div>
+                    <div className="detect-corner corner-tr"></div>
+                    <div className="detect-corner corner-bl"></div>
+                    <div className="detect-corner corner-br"></div>
+                  </div>
+                  <div className="phone-hud">
+                    <div className="hud-pill">Crop</div>
+                    <div className="hud-pill">90° Rotate</div>
+                    <div className="hud-pill hud-pill--active">Watermark</div>
+                  </div>
+                </div>
+              </div>
+              <div className="showcase-label">
+                <div className="showcase-icon">
+                  <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" strokeWidth="2" fill="none">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                  </svg>
+                </div>
+                <h3>Post-Scan Studio</h3>
+                <p>Rotate by 90°, interactive crop with rule-of-thirds grid, brightness &amp; contrast sliders, custom watermark, and page size selection (A4/Letter/Legal/A3).</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════ Cross-Network & Dual Connectivity ══════════════════ */}
+      <section className="section">
         <div className="container">
-            <div className="section-header fade-in">
-                <h2>Advanced Toolsets &amp; Features</h2>
-                <p>Everything you expect from the ultimate wireless printing framework.</p>
+          <div className="section-header fade-in">
+            <h2>Seamless Connectivity: Same Wi-Fi or Cross-Network</h2>
+            <p>Whether you're on your home Wi-Fi, office VLANs, or a guest network, WiFi Print connects seamlessly.</p>
+          </div>
+          <div className="network-dual-card fade-in">
+            <div className="network-mode-box">
+              <h4>⚡ Same Wi-Fi Subnet</h4>
+              <p>When phone and PC share the same Wi-Fi router, zero setup is needed. The app auto-discovers your PC via mDNS and connects immediately with no manual IP configuration.</p>
+              <div className="check-yes">✓ Zero Configuration · Instant Auto-Connect</div>
             </div>
-            <div className="features-grid">
-                <div className="feature-card fade-in">
-                    <div className="feature-icon">📁</div>
-                    <h3>Universal File Formats</h3>
-                    <p>Natively queue standard PDFs, raw images, text documents. Integrates with local conversions for DOCX office files.</p>
-                </div>
-                <div className="feature-card fade-in">
-                    <div className="feature-icon">📷</div>
-                    <h3>HD Document Scanner</h3>
-                    <p>Built-in AI filters, smart skew correction, and contrast adjustments for clean paper digital scans.</p>
-                </div>
-                <div className="feature-card fade-in">
-                    <div className="feature-icon">🪪</div>
-                    <h3>Smart ID Cards</h3>
-                    <p>Combine front and back dimensions effortlessly. Eliminates double-printing and manual copy alignment.</p>
-                </div>
-                <div className="feature-card fade-in">
-                    <div className="feature-icon">⚡</div>
-                    <h3>mDNS Auto-Discovery</h3>
-                    <p>Zero manual IP configurations. Open the mobile app and discover active server hosts in less than a second.</p>
-                </div>
-                <div className="feature-card fade-in">
-                    <div className="feature-icon">🔒</div>
-                    <h3>100% Offline Network</h3>
-                    <p>Operates entirely locally. Your data remains in your router subnet—ideal for sensitive and high-privacy files.</p>
-                </div>
-                <div className="feature-card fade-in">
-                    <div className="feature-icon">🔄</div>
-                    <h3>SignalR Real-Time Ticks</h3>
-                    <p>Stay updated. Monitor active print status, spool progress, and printer queues directly from your Android handset.</p>
-                </div>
+            <div className="network-mode-box">
+              <h4>🔒 Cross-Network / Guest Wi-Fi / VLANs</h4>
+              <p>On separate networks or office subnets? Simply scan the permanent QR code on the desktop dashboard or enter the IP with the 6-digit rotating PIN.</p>
+              <div className="pin-badge-display">
+                <span>PAIRING PIN:</span>
+                <span>558 127</span>
+              </div>
             </div>
+          </div>
         </div>
-    </section>
+      </section>
 
-    <section id="technical-benefits" className="section">
+      {/* ══════════════════ Password-Protected PDF Support ══════════════════ */}
+      <section className="section bg-darker">
         <div className="container">
-            <div className="section-header fade-in">
-                <h2>No Cloud. Just Speed &amp; Security.</h2>
-                <p>Compare local peer-to-peer Wi-Fi channels against latency-prone remote servers.</p>
-            </div>
-            <div className="about-content fade-in">
-                <p>**Sub-Second Local Speeds:** By utilizing your home router's 2.4GHz or 5GHz Wi-Fi bandwidth, WiFi Print side-steps the latency, lag, and upload times typical of cloud structures. High-resolution photos and heavy multi-page PDF documents are processed instantly at full LAN speed.</p>
-                <p>**Immutable Document Security:** In an era of online tracking, WiFi Print sets the benchmark for local data ownership. Documents never bypass your network adapter or undergo cloud storage caching. All transactions are direct, authenticated with unique local pairing tokens, and protected under HTTPS.</p>
-                <p>**Universal PC Printer Driver Compatibility:** Our lightweight desktop server acts as a universal interpreter. If your Windows 10 or 11 PC can spool to a printer (including old USB inkjets, plotters, thermal labels, or PDF writers), your Android phone can print to it immediately.</p>
-            </div>
+          <div className="section-header fade-in">
+            <h2>Native Support for Password-Protected PDFs</h2>
+            <p>Print bank statements, tax forms, payslips, and invoices without unprotecting them on third-party websites.</p>
+          </div>
+          <div className="about-content fade-in" style={{ textAlign: "center", maxWidth: "800px", margin: "0 auto" }}>
+            <p>
+              Many sensitive documents like monthly bank e-statements, salary slips, and medical records arrive with
+              password encryption. Uploading them to random online PDF unlocker websites creates severe identity theft risks.
+            </p>
+            <p>
+              With WiFi Print, your encrypted PDFs remain <strong>100% private and protected</strong>. The app prompts you
+              for the password, verifies it on your device, and decrypts the document directly for local printing via
+              encrypted peer-to-peer streaming to your Windows PC.
+            </p>
+          </div>
         </div>
-        <div className="glow glow-3"></div>
-    </section>
+      </section>
 
-    <section id="printing-guide" className="section bg-darker">
+      {/* ══════════════════ Comparison Table (SEO Powerhouse) ══════════════════ */}
+      <section id="comparison" className="section">
         <div className="container">
-            <article className="fade-in">
-                <div className="section-header">
-                    <div className="badge">Detailed Tutorial</div>
-                    <h2>How to Print from Your Android Phone to Any PC Printer</h2>
-                    <p>Follow our comprehensive walkthrough to configure local offline printing in under two minutes.</p>
-                </div>
-                <div className="about-content">
-                    <p>Need to print school slides, tax files, or scanned receipts from your **Android device to a Windows PC printer**? Whether you own an HP LaserJet, Epson EcoTank, Canon PIXMA, Brother MFC, or any legacy printer connected via USB, WiFi Print makes wireless queues effortless.</p>
- 
-                    <h3>Step 1: Download &amp; Run the WiFi Print Windows Server</h3>
-                    <p>Download the PC application from our <a href="#download">Downloads</a> section below. The server requires Windows 10 or 11 and runs on the modern, high-performance .NET 8 framework. Launch the server — it automatically identifies all printers installed in your Windows control panel and renders a unique 6-digit connection PIN on your desktop.</p>
- 
-                    <h3>Step 2: Connect the WiFi Print Android Application</h3>
-                    <p>Install the mobile client on your **Android phone or tablet** (compatible with Android 8.0+). Connect both your smartphone and PC to the **same Wi-Fi router** (note: no active internet is required, just a local router connection). Launch the app: it will locate your host PC via mDNS. Tap the computer and input the 6-digit PIN displayed on your PC screen to establish secure, authenticated peer trust.</p>
- 
-                    <h3>Step 3: Select Your Documents &amp; Print Instantly</h3>
-                    <p>Choose your files from three primary vectors:</p>
-                    <ul style={{ margin: "1rem 0 1rem 1.5rem", lineHeight: "2" }}>
-                        <li><strong>File Browsing:</strong> Print PDFs, text logs, or standard images natively from your device storage.</li>
-                        <li><strong>Built-in AI Scan:</strong> Capture physical pages, crop perspective skew, and queue the output straight to paper.</li>
-                        <li><strong>ID Card Layout:</strong> Auto-merge both sides of government ID documents on one printable side.</li>
-                        <li><strong>Direct Sharing:</strong> Select "Share to WiFi Print" from other mobile applications (WhatsApp, Drive, Gmail) to print directly.</li>
-                    </ul>
-                    <p>Choose your target printer, adapt page parameters (margins, grayscale vs color, landscape or portrait orientations, paper standards like A4 or Letter), and tap "Print". The file is spooled through your local network in seconds.</p>
- 
-                    <h3>Supported Printer Brands</h3>
-                    <p>Because the spooling process leverages the host PC's drivers, WiFi Print natively supports **all printer brands**. This covers: **HP** (LaserJet, OfficeJet, Envy, SmartTank), **Canon** (PIXMA, MAXIFY, imageCLASS), **Epson** (EcoTank, WorkForce, Expression), **Brother** (MFC, HL, DCP), **Samsung**, **Lexmark**, **Xerox**, **Ricoh**, and **Kyocera**. If your Windows system can output to it, your phone is fully compatible.</p>
-                </div>
-            </article>
-        </div>
-    </section>
+          <div className="section-header fade-in">
+            <h2>WiFi Print vs Cloud Print &amp; Competitor Apps</h2>
+            <p>See why thousands of users and businesses choose WiFi Print over manufacturer cloud tools.</p>
+          </div>
 
-    <section id="comparison" className="section">
+          <div className="comparison-table-wrapper fade-in">
+            <table className="comparison-table">
+              <thead>
+                <tr>
+                  <th>Feature</th>
+                  <th className="highlight-col">WiFi Print v2.0</th>
+                  <th>Google Cloud Print (Legacy)</th>
+                  <th>HP Smart / Canon PRINT</th>
+                  <th>NokoPrint / PrinterShare</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Pricing &amp; Ads</strong></td>
+                  <td className="highlight-col"><span className="check-yes">100% Free &amp; Ad-Free</span></td>
+                  <td>Discontinued (2020)</td>
+                  <td>Free (Encourages Subscriptions)</td>
+                  <td>Paid Upgrades / Ads</td>
+                </tr>
+                <tr>
+                  <td><strong>Zero Cloud / 100% Local LAN</strong></td>
+                  <td className="highlight-col"><span className="check-yes">✓ Local P2P TLS</span></td>
+                  <td><span className="check-no">✗ Cloud Dependent</span></td>
+                  <td><span className="check-no">✗ Cloud Dependent</span></td>
+                  <td>Partial (SMB Sharing)</td>
+                </tr>
+                <tr>
+                  <td><strong>Works with USB-Only Printers</strong></td>
+                  <td className="highlight-col"><span className="check-yes">✓ Any Windows Printer</span></td>
+                  <td><span className="check-yes">✓ Via Chrome</span></td>
+                  <td><span className="check-no">✗ Requires Brand Wi-Fi</span></td>
+                  <td>Complex SMB Setup</td>
+                </tr>
+                <tr>
+                  <td><strong>Offline Printing (No Internet)</strong></td>
+                  <td className="highlight-col"><span className="check-yes">✓ 100% Offline Capable</span></td>
+                  <td><span className="check-no">✗ Required Internet</span></td>
+                  <td><span className="check-no">✗ Requires Internet</span></td>
+                  <td><span className="check-yes">✓ Local Network</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Built-in On-Device ML OCR Scanner</strong></td>
+                  <td className="highlight-col"><span className="check-yes">✓ Included (ML Kit)</span></td>
+                  <td><span className="check-no">✗ Not Available</span></td>
+                  <td>Cloud-Processed Scan</td>
+                  <td><span className="check-no">✗ Not Available</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Continuous Batch Multi-Page Scan</strong></td>
+                  <td className="highlight-col"><span className="check-yes">✓ Included</span></td>
+                  <td><span className="check-no">✗ Not Available</span></td>
+                  <td>Limited</td>
+                  <td><span className="check-no">✗ Not Available</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Password-Protected PDF Support</strong></td>
+                  <td className="highlight-col"><span className="check-yes">✓ In-App Decryption</span></td>
+                  <td><span className="check-no">✗ Failed on Password</span></td>
+                  <td>Inconsistent</td>
+                  <td>Paid Feature</td>
+                </tr>
+                <tr>
+                  <td><strong>Cross-Network &amp; Subnet PIN Pairing</strong></td>
+                  <td className="highlight-col"><span className="check-yes">✓ QR + Rotating PIN</span></td>
+                  <td>Google Account Login</td>
+                  <td>Same SSID Only</td>
+                  <td>Manual IP Required</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════ Features Grid ══════════════════ */}
+      <section id="features" className="section bg-darker">
         <div className="container">
-            <div className="section-header fade-in">
-                <h2>Local Network vs. Cloud Services</h2>
-                <p>Why local-first direct transmission is superior to traditional manufacturer utilities.</p>
+          <div className="section-header fade-in">
+            <h2>Everything You Need for Seamless Wireless Printing</h2>
+            <p>Engineered for reliability, privacy, and speed in any printing environment.</p>
+          </div>
+          <div className="features-grid">
+            <div className="feature-card fade-in">
+              <div className="feature-icon">🔍</div>
+              <h3>ML Kit Document Scanner</h3>
+              <p>On-device optical character recognition extracts text, straightens perspective, and auto-detects edges.</p>
             </div>
-            <div className="about-content fade-in">
-                <p>Ever since Google retired its unified **Google Cloud Print** service, printing from mobile devices has become fragmented and frustrating. Most brand-specific printer applications (like HP Smart, Canon PRINT, or Epson iPrint) require modern Wi-Fi-native printer hardware, constant cloud logins, bloated software sizes, and routing your personal documents through remote corporate systems.</p>
-                <p>**WiFi Print returns control to the user.** By forming a secure direct bridge over your router, we ensure your documents remain confidential and your transfers remain lightning-fast. You don't need a high-tech "Wi-Fi printer" — as long as your printer is connected to your Windows computer via a basic USB cable, it is instantly unlocked for mobile wireless printing!</p>
-                <p>Enjoy an experience with **no accounts, no usage caps, no subscription gates, and 100% offline capability**. Ideal for secure offices, bank branches, schools, or homes where security is the default priority.</p>
+            <div className="feature-card fade-in">
+              <div className="feature-icon">📑</div>
+              <h3>Continuous Batch Scan</h3>
+              <p>Capture multi-page contracts and reports without interruptions. Reorder, rotate, and export to a single PDF.</p>
             </div>
+            <div className="feature-card fade-in">
+              <div className="feature-icon">🔒</div>
+              <h3>Protected PDF Support</h3>
+              <p>Direct decryption and printing of password-locked bank statements, invoices, and confidential files.</p>
+            </div>
+            <div className="feature-card fade-in">
+              <div className="feature-icon">🌐</div>
+              <h3>Cross-Network Pairing</h3>
+              <p>Connect seamlessly across separate Wi-Fi subnets, office VLANs, or guest networks using permanent QR and PIN.</p>
+            </div>
+            <div className="feature-card fade-in">
+              <div className="feature-icon">🪪</div>
+              <h3>ID Card Auto-Merge</h3>
+              <p>Scan both sides of licenses and ID badges; auto-collates both images onto a single printable page.</p>
+            </div>
+            <div className="feature-card fade-in">
+              <div className="feature-icon">⚡</div>
+              <h3>SignalR Real-Time Queue</h3>
+              <p>Live WebSockets connection provides real-time desktop print job progress and completion alerts.</p>
+            </div>
+          </div>
         </div>
-    </section>
+      </section>
 
-    <section id="faq" className="section">
+      {/* ══════════════════ Step-by-Step Guide (SEO Rich) ══════════════════ */}
+      <section id="printing-guide" className="section">
         <div className="container">
-            <div className="section-header fade-in">
-                <h2>Frequently Asked Questions</h2>
-                <p>Find answers to common questions about the best free local print server.</p>
+          <article className="fade-in">
+            <div className="section-header">
+              <div className="announcement-badge">
+                <span>Tutorial &amp; Setup</span>
+              </div>
+              <h2>How to Print from Android to Any Windows PC Printer: Full Guide</h2>
+              <p>A comprehensive walkthrough for home offices, businesses, and schools.</p>
             </div>
-            <div className="faq-grid">
-                <details className="faq-item fade-in">
-                    <summary>How do I print from my Android phone to my Windows PC?</summary>
-                    <p>It's incredibly simple! First, run the WiFi Print Server application on your Windows 10 or Windows 11 computer. Next, open the WiFi Print app on your Android device (ensure both are connected to the same Wi-Fi network). The app will automatically discover your PC. Enter the pairing PIN, select your document (PDF, DOCX, or Image), and tap print. Your file is sent instantly over your local network to the selected printer.</p>
-                </details>
-                <details className="faq-item fade-in">
-                    <summary>Do I need an active internet connection or cloud service?</summary>
-                    <p>No, absolutely not. Unlike Google Cloud Print or manufacturer-specific remote printing apps, WiFi Print operates entirely on your local Wi-Fi network (LAN). Your files never leave your home or office network, making it a highly secure, private, and offline-capable printing solution.</p>
-                </details>
-                <details className="faq-item fade-in">
-                    <summary>Which file formats are supported for wireless printing?</summary>
-                    <p>The Android printing app supports a wide variety of formats. You can natively print PDF files, standard images (JPEG, PNG, WebP), and plain text files. Furthermore, if you install LibreOffice on your Windows PC, the server can automatically convert and print Microsoft Word documents (DOCX, DOC) sent from your phone.</p>
-                </details>
-                <details className="faq-item fade-in">
-                    <summary>Can I scan documents directly with the app?</summary>
-                    <p>Yes! The WiFi Print Android app includes a full-featured document scanner. It uses AI to detect document edges, correct perspective, and crop out backgrounds. You can scan multi-page documents or use the special ID Card mode to print both sides of an ID on a single page.</p>
-                </details>
-                <details className="faq-item fade-in">
-                    <summary>Is the connection between my phone and PC secure?</summary>
-                    <p>Yes. The connection between the Android client and the Windows server is secured using HTTPS with automatically generated self-signed certificates. After the initial PIN pairing process, all subsequent communication and file transfers are authenticated using JSON Web Tokens (JWT), ensuring that only authorized devices can send print jobs to your computer.</p>
-                </details>
-                <details className="faq-item fade-in">
-                    <summary>How do I print from my Android phone to an HP printer?</summary>
-                    <p>If your HP printer (LaserJet, DeskJet, OfficeJet, or Envy) is installed on your Windows PC, simply run the WiFi Print Server. The Android app discovers all installed printers on your PC, including HP models. Select your HP printer from the list, choose your document, and print — no HP Smart app required.</p>
-                </details>
-                <details className="faq-item fade-in">
-                    <summary>Can I print from my phone without a wireless printer?</summary>
-                    <p>Yes! This is one of WiFi Print's biggest advantages. Your printer doesn't need to be a "wireless printer" at all. Even a basic USB-only printer connected to your Windows PC works perfectly. WiFi Print sends the file from your phone to your PC over Wi-Fi, and your PC handles the actual printing to the connected printer. This means you can wirelessly print to any printer, including old or budget models.</p>
-                </details>
-                <details className="faq-item fade-in">
-                    <summary>How do I print a PDF from my phone to my computer?</summary>
-                    <p>Open the WiFi Print app, browse or share the PDF file from any app, select your PC's printer, adjust settings (copies, color, paper size), and tap Print. The PDF is transferred at full speed over your local Wi-Fi and printed instantly. WiFi Print handles standard PDF files natively without any conversion.</p>
-                </details>
-                <details className="faq-item fade-in">
-                    <summary>What is the best free printing app for Android in 2026?</summary>
-                    <p>WiFi Print is one of the top-rated free printing apps for Android in 2026. Unlike manufacturer apps (HP Smart, Canon PRINT) that only work with specific printers, WiFi Print works with any printer connected to a Windows PC. It's completely free, open source, and includes a built-in document scanner, ID card scanner, and passport photo templates — all without ads or subscriptions.</p>
-                </details>
-                <details className="faq-item fade-in">
-                    <summary>How to connect my Android phone to my Windows printer?</summary>
-                    <p>Ensure both your phone and PC are on the same Wi-Fi network. Run the WiFi Print Server on your PC (it shows a PIN). Open WiFi Print on your phone — it will auto-discover your PC using mDNS technology. Tap to connect, enter the 6-digit PIN, and you're paired. The entire process takes less than 30 seconds.</p>
-                </details>
-                <details className="faq-item fade-in">
-                    <summary>How do I scan documents and print them from my phone?</summary>
-                    <p>WiFi Print includes a full-featured document scanner powered by AI edge detection. Open the app, select "Scan", point your camera at the document, and it will automatically detect edges, correct perspective, and enhance quality. You can scan multiple pages into a single PDF. Then simply select your printer and tap Print — the scanned document goes directly from your phone's camera to paper.</p>
-                </details>
-                <details className="faq-item fade-in">
-                    <summary>Is WiFi Print safe for printing confidential documents?</summary>
-                    <p>Absolutely. WiFi Print is designed with security as a priority. All communication between your phone and PC is encrypted using HTTPS (TLS). Authentication is handled via JSON Web Tokens (JWT) after a secure PIN pairing. Most importantly, your documents never leave your local network — no cloud server, no third-party processing. This makes it suitable for printing financial records, medical documents, legal papers, and other sensitive information.</p>
-                </details>
-                <details className="faq-item fade-in">
-                    <summary>What printers are compatible with WiFi Print?</summary>
-                    <p>WiFi Print is compatible with every printer that is installed on your Windows PC. This includes HP, Canon, Epson, Brother, Samsung, Lexmark, Xerox, Ricoh, Kyocera, and any other brand. It supports USB printers, network printers, and virtual printers. The app communicates with your PC, which then handles the printing using the standard Windows print system.</p>
-                </details>
-                <details className="faq-item fade-in">
-                    <summary>How to print passport photos from my phone?</summary>
-                    <p>WiFi Print includes built-in photo templates for passport photos (35×45mm), visa photos (2×2 inch), and wallet-sized photos. Take a photo with your phone's camera, select the desired template, and the app automatically arranges multiple copies in a grid layout on a single A4 sheet. This saves paper and ensures standard compliance for official documents.</p>
-                </details>
-                <details className="faq-item fade-in">
-                    <summary>Does WiFi Print work without internet?</summary>
-                    <p>Yes. WiFi Print requires only a local Wi-Fi connection (a router connecting your phone and PC). No internet access is needed at any point. This makes it perfect for use in areas with poor connectivity, restricted networks (schools, offices, government buildings), or when you simply want to keep your printing completely offline and private.</p>
-                </details>
-            </div>
-        </div>
-    </section>
+            <div className="about-content">
+              <p>
+                Printing from an <strong>Android smartphone or tablet to a printer connected to a Windows PC</strong>
+                used to require complex SMB file-sharing permissions or reliance on defunct cloud services. WiFi Print
+                eliminates all complexity.
+              </p>
 
-    <section id="download" className="section cta-section bg-darker">
+              <h3>Step 1: Set Up the WiFi Print Server on Your Windows PC</h3>
+              <p>
+                Download and install the WiFi Print Server on your <strong>Windows 10 or Windows 11</strong> computer.
+                The server runs silently in your system tray using the high-performance .NET 8 runtime. It immediately
+                queries your Windows print spooler and lists all active printers — including <strong>HP LaserJet, Canon PIXMA,
+                Epson EcoTank, Brother MFC</strong>, receipt printers, and USB-only models.
+              </p>
+
+              <h3>Step 2: Connect Your Android Device</h3>
+              <p>
+                Open the WiFi Print app on your Android device (requires Android 8.0 or newer). If your phone and PC
+                are connected to the <strong>same Wi-Fi network</strong>, the app discovers the server in under a second
+                via mDNS. If your devices are on different subnets or an office guest Wi-Fi, tap "Scan QR" and point your
+                camera at the desktop dashboard, or enter the rotating 6-digit PIN.
+              </p>
+
+              <h3>Step 3: Choose Your Document &amp; Print Instantly</h3>
+              <p>
+                You can print documents in three convenient ways:
+              </p>
+              <ul style={{ margin: "1rem 0 1rem 1.5rem", lineHeight: "2" }}>
+                <li><strong>Browse files:</strong> Open PDFs, password-protected e-statements, images (JPEG, PNG, WebP), or Word DOCX files.</li>
+                <li><strong>Scan with OCR:</strong> Use the camera to capture documents with edge detection, extract text with on-device OCR, and print directly.</li>
+                <li><strong>Share to print:</strong> From WhatsApp, Gmail, Chrome, or Google Drive, tap "Share" and select WiFi Print.</li>
+              </ul>
+              <p>
+                Select your printer, adjust copies, color vs. monochrome, orientation, and paper size (A4, Letter, Legal),
+                and tap Print. Your document transfers over your local network and prints immediately.
+              </p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      {/* ══════════════════ FAQ Section ══════════════════ */}
+      <section id="faq" className="section bg-darker">
         <div className="container">
-            <div className="cta-box fade-in">
-                <h2>Ready to Start Wireless Printing?</h2>
-                <p>Download the Android application and the desktop server client to unlock instant printing.</p>
-
-                <div className="both-required-badge">
-                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                    <span><strong>Double Components Required</strong> — You will need the mobile client and the PC host companion to spool files locally.</span>
-                </div>
-
-                <div className="setup-visual">
-                    <div className="setup-component">
-                        <div className="setup-icon">📱</div>
-                        <span>Android App</span>
-                    </div>
-                    <div className="setup-connector">
-                        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2.5" fill="none"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                        <span className="setup-wifi-label">Local Router (Wi-Fi)</span>
-                        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2.5" fill="none"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-                    </div>
-                    <div className="setup-component">
-                        <div className="setup-icon">🖥️</div>
-                        <span>PC Server Host</span>
-                    </div>
-                    <div className="setup-connector setup-connector--result">
-                        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2.5" fill="none"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                    </div>
-                    <div className="setup-component">
-                        <div className="setup-icon">🖨️</div>
-                        <span>Printers</span>
-                    </div>
-                </div>
-
-                <div className="download-grid">
-                    <div className="download-card">
-                        <h3 style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem" }}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
-                            Android App Client
-                        </h3>
-                        <p>Supports Android 8.0 Oreo, 9, 10, 11, 12, 13, 14+</p>
-                        <a href="#" className="btn btn-primary w-full" aria-label="Download Android App APK file">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                            Download Mobile APK
-                        </a>
-                        <p className="download-cross-ref">👉 You'll also need the <a href="#download-server-card"><strong>Windows Server Host</strong></a> to print.</p>
-                    </div>
-                    <div className="download-card" id="download-server-card">
-                        <h3 style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem" }}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-                            Windows Server Host
-                        </h3>
-                        <p>Windows 10 / Windows 11 (.NET 8 Runtime required)</p>
-                        <a href="#" className="btn btn-secondary w-full" aria-label="Download Windows Server companion file">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                            Download PC Installer
-                        </a>
-                        <p className="download-cross-ref">👉 You'll also need the <a href="#download"><strong>Android Mobile Client</strong></a> to pair.</p>
-                    </div>
-                </div>
-            </div>
+          <div className="section-header fade-in">
+            <h2>Frequently Asked Questions</h2>
+            <p>Everything you need to know about wireless printing with WiFi Print.</p>
+          </div>
+          <div className="faq-grid">
+            <details className="faq-item fade-in">
+              <summary>How do I print from my Android phone to my Windows PC printer wirelessly?</summary>
+              <p>
+                Install the free WiFi Print Server on your Windows PC and the WiFi Print app on your Android phone.
+                On the same Wi-Fi, the app discovers your PC automatically. Select any document (PDF, Word, or image)
+                or scan paper with the built-in scanner, tap Print, and the file outputs directly to your PC's printer.
+              </p>
+            </details>
+            <details className="faq-item fade-in">
+              <summary>Can I print to a USB-only printer that has no built-in Wi-Fi?</summary>
+              <p>
+                Yes! This is one of WiFi Print's biggest benefits. As long as your USB printer is plugged into your
+                Windows PC and working, WiFi Print acts as a wireless bridge. Your phone talks to the PC over Wi-Fi,
+                and the PC sends the job to your USB printer.
+              </p>
+            </details>
+            <details className="faq-item fade-in">
+              <summary>Does WiFi Print work without internet or cloud services?</summary>
+              <p>
+                Yes. WiFi Print operates 100% offline across your local Wi-Fi router (LAN). Your files never leave your
+                premises, ensuring maximum privacy, zero cloud upload delays, and reliability in air-gapped or offline environments.
+              </p>
+            </details>
+            <details className="faq-item fade-in">
+              <summary>How does the built-in document scanner with on-device OCR work?</summary>
+              <p>
+                The scanner uses Google ML Kit running entirely on your phone's processor. It straightens skewed pages,
+                crops backgrounds, enhances contrast, and recognizes text so you can copy, search, or export clean PDFs
+                ready for printing.
+              </p>
+            </details>
+            <details className="faq-item fade-in">
+              <summary>Can I print password-protected PDFs from my phone?</summary>
+              <p>
+                Yes. When selecting an encrypted PDF (such as a bank statement or salary slip), WiFi Print prompts you
+                for the password and unlocks it on your device for direct printing, without needing to upload the file to third-party unlock sites.
+              </p>
+            </details>
+            <details className="faq-item fade-in">
+              <summary>How do I connect if my phone and PC are on different Wi-Fi networks or subnets?</summary>
+              <p>
+                The Windows desktop dashboard includes Cross-Network Pairing. Simply scan the permanent QR code shown on
+                your PC screen or enter the PC's IP and 6-digit rotating PIN in the Android app.
+              </p>
+            </details>
+            <details className="faq-item fade-in">
+              <summary>How does the continuous batch scan mode work?</summary>
+              <p>
+                In Batch Scan mode, you can capture multiple pages in succession without returning to the main menu.
+                Once captured, you can reorder pages, rotate by 90°, adjust brightness and contrast, apply watermarks,
+                and export a single multi-page PDF.
+              </p>
+            </details>
+            <details className="faq-item fade-in">
+              <summary>Which printer brands and models are supported?</summary>
+              <p>
+                Every printer that works with Windows is supported. This includes HP (LaserJet, DeskJet, OfficeJet),
+                Canon (PIXMA, imageCLASS), Epson (EcoTank), Brother, Samsung, Xerox, Ricoh, Lexmark, POS thermal receipt
+                printers, and virtual PDF printers.
+              </p>
+            </details>
+            <details className="faq-item fade-in">
+              <summary>Is WiFi Print safe for confidential and business documents?</summary>
+              <p>
+                Yes. All communication between client and server is encrypted using TLS (HTTPS). Device pairing is
+                protected via JSON Web Tokens (JWT) and an approval banner on your desktop. Your files are processed
+                locally and never uploaded to any remote server.
+              </p>
+            </details>
+            <details className="faq-item fade-in">
+              <summary>Is WiFi Print really 100% free and open source?</summary>
+              <p>
+                Yes. WiFi Print is free and open-source under the MIT License. There are no subscriptions, no print
+                quotas, and no ads.
+              </p>
+            </details>
+          </div>
         </div>
-    </section>
+      </section>
 
+      {/* ══════════════════ Download Section ══════════════════ */}
+      <section id="download" className="section cta-section bg-darker">
+        <div className="container">
+          <div className="cta-box fade-in">
+            <h2>Ready to start printing?</h2>
+            <p>Download the Android app and the Windows Desktop Server v2.0 to begin.</p>
+
+            <div className="both-required-badge">
+              <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+              <span><strong>Both components required</strong> — You need the Android App on your phone and the Server on your Windows PC.</span>
+            </div>
+
+            <div className="setup-visual">
+              <div className="setup-component">
+                <div className="setup-icon">📱</div>
+                <span>Android App</span>
+              </div>
+              <div className="setup-connector">
+                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2.5" fill="none"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                <span className="setup-wifi-label">Local Wi-Fi</span>
+                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2.5" fill="none"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+              </div>
+              <div className="setup-component">
+                <div className="setup-icon">🖥️</div>
+                <span>Windows Server</span>
+              </div>
+              <div className="setup-connector setup-connector--result">
+                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2.5" fill="none"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </div>
+              <div className="setup-component">
+                <div className="setup-icon">🖨️</div>
+                <span>Your Printer</span>
+              </div>
+            </div>
+
+            <div className="download-grid">
+              {/* Android Card */}
+              <div className="download-card">
+                <h3 style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem" }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                    <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                  </svg>
+                  Android App v2.0
+                </h3>
+                <p>Requires Android 8.0 (Oreo) or newer</p>
+                <a href="https://github.com/sagarsahni6/wifi-print/releases" className="btn btn-primary w-full" aria-label="Download Android App APK">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                  Download APK
+                </a>
+                <p className="download-cross-ref">👉 You'll also need the <a href="#download-server-card"><strong>Windows Server</strong></a> on your PC</p>
+              </div>
+
+              {/* Windows Card */}
+              <div className="download-card" id="download-server-card">
+                <h3 style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem" }}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                    <line x1="8" y1="21" x2="16" y2="21"></line>
+                    <line x1="12" y1="17" x2="12" y2="21"></line>
+                  </svg>
+                  Windows Server v2.0
+                </h3>
+                <p>Requires Windows 10/11 (64-bit) &amp; .NET 8</p>
+                <a href="https://github.com/sagarsahni6/wifi-print/releases" className="btn btn-secondary w-full" aria-label="Download Windows Server Installer">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                  Download Server Setup
+                </a>
+                <p className="download-cross-ref">👉 You'll also need the <a href="#download"><strong>Android App</strong></a> on your phone</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }

@@ -1,4 +1,4 @@
-import Link from 'next/link';
+﻿import Link from 'next/link';
 
 export const metadata = {
   title: 'Terms of Service | WiFi Print — Local & Secure Wireless Printing',
